@@ -16,6 +16,36 @@
 # Mono auto generated files
 mono_crash.*
 
+#Unity files
+.mat
+.mat.meta
+.asset
+.asset.meta
+.asmdef
+.asmdef.meta
+Assets/AmplifyShaderEditor
+Assets/Animations
+Assets/FantasySkyboxFree
+Assets/Fur textures pack
+Assets/Ground textures pack
+Assets/JMO Assets
+Assets/Materials
+Assets/ModelsAndArt
+Assets/Prefabs
+Assets/ShaderlabVS
+Assets/Sounds
+Assets/SpaceSkies Free
+Assets/TextMesh Pro
+Assets/textures
+Library
+Logs
+obj
+Packages
+ProjectSettings
+Temp
+UserSettings
+
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -361,3 +391,24 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+*.terrainlayer
+*.asset
+*.asmdef
+*.mat
+*.txt
+*.fbx
+*.prefab
+*.png
+*.tga
+*.jpg
+*.tif
+*.exr
+AmplifyShaderEditor.csproj
+AmplifyShaderEditor.Samples.BuiltIn.csproj
+AmplifyShaderEditor.Samples.BuiltIn.Player.csproj
+Assembly-CSharp-Editor.csproj
+Assembly-CSharp.csproj
+Assembly-CSharp.Player.csproj
+.editorconfig
+.vsconfig
+Assets/Fantasy Skybox FREE/Scenes/Demo.unity
