@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class CheckForPlayer : MonoBehaviour
 {
-    public Transform player;
-    public float triggerDistance;
-    public Camera mainCamera;
+    [SerializeField] Transform player;
+    [SerializeField] float triggerDistance;
+    [SerializeField] Camera mainCamera;
 
     private Collider thisCollider;
     private Vector3 closestPoint;

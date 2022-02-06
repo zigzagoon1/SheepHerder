@@ -493,6 +493,20 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5372984501935618719, guid: 55462600af847b9409c9e45fa38870ad, type: 3}
   m_PrefabInstance: {fileID: 872508104}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &812317520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812317519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84d4139fa78323245be1254fe36885fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 812317519}
+  grassMaterial: {fileID: 2100000, guid: 353c5b615c6bd894d808e7f851cd3944, type: 2}
 --- !u!54 &812317526
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -614,6 +628,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2927013895006135914, guid: 55462600af847b9409c9e45fa38870ad, type: 3}
+    - {fileID: 320836367184462976, guid: 55462600af847b9409c9e45fa38870ad, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 55462600af847b9409c9e45fa38870ad, type: 3}
 --- !u!1001 &889673996
 PrefabInstance:
@@ -730,7 +745,8 @@ PrefabInstance:
       propertyPath: m_Center.z
       value: 0.29
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7810852499454708292, guid: 7aeab93caba21704c9e1311afbe4185c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 7aeab93caba21704c9e1311afbe4185c, type: 3}
 --- !u!1 &981435070
 GameObject:
@@ -924,6 +940,25 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 100, y: 100.00002, z: 0.5}
   m_Center: {x: 0, y: 0, z: -0.5}
+--- !u!1 &1759912156 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7176807950859208009, guid: 7aeab93caba21704c9e1311afbe4185c, type: 3}
+  m_PrefabInstance: {fileID: 889673996}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1759912157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759912156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84d4139fa78323245be1254fe36885fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1759912156}
+  grassMaterial: {fileID: 2100000, guid: 353c5b615c6bd894d808e7f851cd3944, type: 2}
 --- !u!1 &1762144839
 GameObject:
   m_ObjectHideFlags: 0
@@ -6256,16 +6291,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 2066462462}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: 1054132383583890850, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: 3710738434707379630, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 2064916234097673511, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: -1967631576421560919, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 8056856818456041789, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: 3279352641294131588, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: 3837173908680883260, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 4502412055082496612, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 4754684134866288074, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 1025543830046995696, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
 --- !u!114 &2066462464
 MonoBehaviour:
   m_ObjectHideFlags: 0

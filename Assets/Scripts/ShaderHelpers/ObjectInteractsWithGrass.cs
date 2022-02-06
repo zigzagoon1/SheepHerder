@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-
-
 public struct ObjectPosAndSizeInteractiveGrass
 {
     public Vector3 position;
 
     public float size;
-
 
     public ObjectPosAndSizeInteractiveGrass(Vector3 pos, float size)
     {
@@ -18,7 +15,7 @@ public struct ObjectPosAndSizeInteractiveGrass
         this.size = size;
     }
 }
-[ExecuteAlways]
+
 public class ObjectInteractsWithGrass : MonoBehaviour
 {
     public GameObject target;
@@ -39,9 +36,6 @@ public class ObjectInteractsWithGrass : MonoBehaviour
         buffer = new ComputeBuffer(numInteractableObjects, sizeof(float) * 4);
 
 
-    }
-    private void OnEnable()
-    {
     }
     private void OnDisable()
     {

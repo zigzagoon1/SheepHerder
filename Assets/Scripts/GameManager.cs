@@ -20,10 +20,10 @@ public class GameManager : MonoBehaviour
 
     SceneManager sceneManager;
 
-    private void Start()
+/*    private void Start()
     {
         
         //currentEnemies = currentLevel.enemies;
-    }
+    }*/
     
 }

@@ -8,12 +8,7 @@ public class CameraFollow : MonoBehaviour
     public float camSpeed;
     public GameObject player;
     public Vector3 offset;
-    private Vector3 offset2;
-    Camera mainCamera;
-    float distance;
-    Bounds playerBounds;
-    Vector3 playerPrevPos, playerMoveDir;
-
+    
     private bool _isNearRightEdge = false;
     private bool _isNearLeftEdge = false;
     private bool _isNearTopEdge = false;
@@ -24,50 +19,24 @@ public class CameraFollow : MonoBehaviour
     public bool IsNearTopEdge { get { return _isNearTopEdge; } set { _isNearTopEdge = value; } }
     public bool IsNearBottomEdge { get { return _isNearBottomEdge; } set { _isNearBottomEdge = value; } }
 
-
-
-
-
-    /*    BoxCollider[] triggerColliders;
-        BoxCollider rightCollider;
-        BoxCollider leftCollider;
-        BoxCollider topCollider;
-        BoxCollider bottomCollider;*/
-    private void Start()
-    {
-        
-/*        triggerColliders = GetComponentsInChildren<BoxCollider>();
-        rightCollider = triggerColliders.ToList().Find(x => x.name == "Right");
-        leftCollider = triggerColliders.ToList().Find(x => x.name == "Left");
-        topCollider = triggerColliders.ToList().Find(x => x.name == "Top");
-        bottomCollider = triggerColliders.ToList().Find(x => x.name == "Bottom");*/
-        /*        mainCamera = GetComponent<Camera>();
-                Collider playerCollider = player.GetComponent<Collider>();
-                playerBounds = playerCollider.bounds
-                transform.LookAt(player.transform.position);
-                offset2 = transform.position - player.transform.position;
-                distance = offset2.magnitude;
-                playerPrevPos = player.transform.position;*/
-    }
     private void LateUpdate()
     {
-        //Debug.Log($"Right = {IsNearRightEdge}; Left = {IsNearLeftEdge}; Top = {IsNearTopEdge}; Bottom = {IsNearBottomEdge}.");
         if (IsNearRightEdge)
         {
-            transform.position += Vector3.right * camSpeed *  Time.deltaTime;
+            transform.position += camSpeed * Time.deltaTime * Vector3.right;
         }
         if (IsNearLeftEdge)
         {
-            transform.position += Vector3.left * camSpeed * Time.deltaTime;
+            transform.position += camSpeed * Time.deltaTime * Vector3.left;
         }
         if (IsNearTopEdge)
         {
-            transform.position += Vector3.forward * camSpeed * Time.deltaTime;
+            transform.position += camSpeed * Time.deltaTime * Vector3.forward;
 
         }
         if (IsNearBottomEdge)
         {
-            transform.position += Vector3.back * camSpeed * Time.deltaTime;
+            transform.position += camSpeed * Time.deltaTime * Vector3.back;
         }
         /*        Plane[] frustum = GeometryUtility.CalculateFrustumPlanes(mainCamera);
                 if (GeometryUtility.TestPlanesAABB(frustum, playerBounds))
@@ -82,17 +51,5 @@ public class CameraFollow : MonoBehaviour
                     transform.LookAt(player.transform.position);
                     playerPrevPos = player.transform.position;
                 }*/
-    }
-    public void MoveUp()
-    {
-    }
-    public void MoveDown()
-    {
-    }
-    public void MoveRight()
-    {
-    }
-    public void MoveLeft()
-    {
     }
 }

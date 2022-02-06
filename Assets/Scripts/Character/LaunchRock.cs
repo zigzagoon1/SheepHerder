@@ -8,18 +8,12 @@ public class LaunchRock : MonoBehaviour
     public GameObject rockPrefab;
     public float launchVelocity;
     public float drag;
-    
 
     [SerializeField] private int rockCount = 0;
     private GameObject[] rocks;
 
     PlayerController player;
     int counter = 0;
-    private void Start()
-    {
-
-    }
-
     private void Awake()
     {
         player = FindObjectOfType<PlayerController>();
@@ -50,27 +44,15 @@ public class LaunchRock : MonoBehaviour
         if (rockCount >= 5)
         {
             rockCount = rocks.Count<GameObject>();
-            //rocks[counter].gameObject.transform.position = startPosition;
-            //rocks[counter].gameObject.transform.rotation = startRotation;
-            rocks[counter].gameObject.transform.position = transform.position;
-            rocks[counter].gameObject.transform.rotation = transform.rotation;
+            rocks[counter].transform.SetPositionAndRotation(transform.position, transform.rotation);
             rocks[counter].GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0, 0, launchVelocity), ForceMode.Impulse);
             rocks[counter].GetComponent<Rigidbody>().drag = drag;
-/*            Destroy(rocks[counter].gameObject);
-            rocks[counter] = null;
-            rocks[counter] = Instantiate(rockPrefab, transform.position, transform.rotation);*/
             counter++;
         }
         if (counter >= 5)
         {
             counter = 0;
         }
-
-
-
-
         rockCount++;
-
-
     }
 }

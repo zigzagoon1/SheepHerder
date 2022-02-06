@@ -107,14 +107,12 @@ public class Sheep : MonoBehaviour, ICharacter
         {
             animator.SetBool("isRunning", false);
             attacker = null;
-            //return to wandering state or die
         }
     }
     void FSM_Follow(FSM fsm, FSM.Step step, FSM.State state)
     {
         if (step == FSM.Step.Enter)
         {
-            //establish players current position
             _currentState = _follow;
             Debug.Log("sheep is following player");
             timer = 0;
@@ -209,8 +207,7 @@ public class Sheep : MonoBehaviour, ICharacter
         Vector3 randDirection = Random.insideUnitSphere * dist;
 
         randDirection += origin;
-        NavMeshHit navHit;
-        NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
+        NavMesh.SamplePosition(randDirection, out NavMeshHit navHit, dist, layermask);
         return navHit.position;
     }
     private IEnumerator Timer()
