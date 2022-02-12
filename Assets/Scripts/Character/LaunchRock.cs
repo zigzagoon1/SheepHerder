@@ -13,6 +13,7 @@ public class LaunchRock : MonoBehaviour
     private GameObject[] rocks;
 
     PlayerController player;
+    //
     int counter = 0;
     private void Awake()
     {
@@ -41,7 +42,7 @@ public class LaunchRock : MonoBehaviour
                 rocks[System.Array.FindIndex(rocks, x => x == null)] = rock;
             }
         }
-        if (rockCount >= 5)
+        else
         {
             rockCount = rocks.Count<GameObject>();
             rocks[counter].transform.SetPositionAndRotation(transform.position, transform.rotation);

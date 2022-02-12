@@ -13,14 +13,16 @@ public class Sheep : MonoBehaviour, ICharacter
     public SpeedSO speed;
     public SpeedSO fleeSpeed;
 
-    public FSM fsm;
-    public FSM.State _follow;
-    public FSM.State _flee;
+    public int _hitCount;
+
+
+    FSM fsm;
+    FSM.State _follow;
+    FSM.State _flee;
     FSM.State _wander;
     FSM.State _die;
     FSM.State _currentState;
 
-    [SerializeField] int _hitCount;
     public int HitCount { get { return _hitCount; } set { _hitCount = value; } }
     [SerializeField] float wanderTime;
     [SerializeField] float wanderRadius;

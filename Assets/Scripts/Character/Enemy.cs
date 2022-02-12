@@ -5,46 +5,32 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour, ICharacter
 {
-    public EnemyType type;
 
-    public float distanceMultiplier;
     public int _hitCount;
+    [SerializeField] EnemyType type;
 
+    [SerializeField] float wanderTimer, wanderRadius, distanceMultiplier, _speed;
 
-    public Transform[] waypoints;
+    [SerializeField] int _hitsToDefeat;
+    //destination points for paths for the enemy to walk along
+    [SerializeField] Transform[] waypoints;
 
-    [SerializeField]
-    GameObject target = null;
-    public GameObject player;
+    [SerializeField] GameObject target = null, player;
 
-    [SerializeField] float attackTimer;
+    //increasing or decreasing this variable affects the total cooldown time before player can reuse attack
     [SerializeField] float attackCooldown;
-    [SerializeField] bool attackCooldownInactive = true;
+    //this timer is incremented until it reaches attackCooldown
+    private float attackTimer;
+    private bool attackCooldownInactive = true, isWandering, isFacingTarget = false;
 
-    NavMeshPath patrolPathA;
-    NavMeshPath patrolPathB;
-    NavMeshPath targetPath;
+    NavMeshPath patrolPathA, patrolPathB;
     NavMeshAgent _agent;
 
     Animator _animator;
 
     FSM fsm;
-    FSM.State _patrol;
-    FSM.State _chase;
-    FSM.State _attack;
-    FSM.State _die;
-    FSM.State _currentState;
+    FSM.State _patrol, _chase, _attack, _die, _currentState;    
 
-    
-
-    [SerializeField] int _hitsToDefeat;
-    [SerializeField] float _speed;
-    [SerializeField] bool isWandering;
-
-    [SerializeField] float wanderTimer;
-    [SerializeField] float wanderRadius;
-    float timer;
-    float targetTimer = 0;
     float newPathTimer = 0;
     float radius = 15f;
     Sheep[] activeSheep;
@@ -65,12 +51,9 @@ public class Enemy : MonoBehaviour, ICharacter
         _die = FSM_Die;
         fsm = new FSM();
         fsm.OnSpawn(_patrol);
-
-        timer = wanderTimer;
     }
     private void Awake()
     {
-
         activeSheep = FindObjectsOfType<Sheep>();
     }
     private void FixedUpdate()
@@ -123,15 +106,12 @@ public class Enemy : MonoBehaviour, ICharacter
 
             if (_agent.transform.position == _agent.pathEndPosition)
             {
-                
                 newPathTimer += Time.deltaTime;
-                Debug.Log(newPathTimer);
                 if (newPathTimer > 1)
                 {
                     fsm.TransitionTo(_patrol);
                     newPathTimer = 0;
                 }
-
             }
             
             if (target == null)
@@ -165,17 +145,6 @@ public class Enemy : MonoBehaviour, ICharacter
                     timer = 0;
                 }
             }*/
-            
-            
-                
-               // agent.Raycast(Vector3.forward * distanceMultiplier, out NavMeshHit hit);
-
-                //agent.Raycast and if player or a sheep enters angle around line of sight, target it, face it, and switch state to chase
-                //hit.gameObject.tag == targetable? target = hit.gameObject : target = null;
-                //if (target != null)
-                //{
-                //  fsm.TransitionTo(_chase);
-                //}
             
             if (_hitCount >= _hitsToDefeat)
             {
@@ -321,7 +290,7 @@ public class Enemy : MonoBehaviour, ICharacter
             _agent.isStopped = true;
             _hitCount++;
             target = player;
-            FaceTarget();
+            StartCoroutine(FaceTarget());
             if (_currentState != _chase)
             {
                 _agent.ResetPath();
@@ -336,21 +305,24 @@ public class Enemy : MonoBehaviour, ICharacter
         Vector3 randDirection = Random.insideUnitSphere * dist;
 
         randDirection += origin;
-        NavMeshHit navHit;
-        NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
+        NavMesh.SamplePosition(randDirection, out NavMeshHit navHit, dist, layermask);
         return navHit.position;
     }
+    //if player or sheep is targeted, face it-- needs fixing
     public IEnumerator FaceTarget()
     {
-        bool isFacingTarget = false;
         while (isFacingTarget == false)
         {
             Vector3 direction = (target.transform.position - transform.position).normalized;
+            if (direction == Vector3.zero)
+            {
+                direction = new Vector3(0.01f, 0.01f, 0.01f);
+            }
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5);
             yield return null;
+            
         }
-        isFacingTarget = false;
-
     }
 }

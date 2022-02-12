@@ -51,12 +51,15 @@ public class ObjectInteractsWithGrass : MonoBehaviour
 
         foreach (ObjectInteractsWithGrass obj in interactableObjects)
         {
+            if (obj != null)
+            {
+                BoxCollider collider = obj.GetComponent<BoxCollider>();
+                float size = Mathf.Max(collider.bounds.size.x, collider.bounds.size.z);
+                objectData[j].position = obj.transform.position;
+                objectData[j].size = size;
+                j++;
+            }
 
-            BoxCollider collider = obj.GetComponent<BoxCollider>();
-            float size = Mathf.Max(collider.bounds.size.x, collider.bounds.size.z);
-            objectData[j].position = obj.transform.position;
-            objectData[j].size = size;
-            j++;
         }
         if (buffer == null)
         {
@@ -69,5 +72,9 @@ public class ObjectInteractsWithGrass : MonoBehaviour
         Shader.SetGlobalBuffer(obDataID, buffer);
         grassMaterial.SetBuffer(obDataID, buffer);
         
+    }
+    private void OnDestroy()
+    {
+        interactableObjects.Remove(this); 
     }
 }

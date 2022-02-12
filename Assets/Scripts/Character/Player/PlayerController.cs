@@ -63,6 +63,8 @@ public class PlayerController : MonoBehaviour
         Vector2 inputVec = input.Get<Vector2>();
         move = new Vector3(inputVec.x, gravity, inputVec.y);
     }
+
+
     public void OnAttack()
     {
         //play animation, add cooldown for attack
