@@ -18,6 +18,7 @@ public class CheckForPlayer : MonoBehaviour
 
     private void Start()
     {
+        player = GameObject.Find("PlayerParent").transform;
         cam = mainCamera.GetComponent<CameraFollow>();
         thisCollider = GetComponent<Collider>();
     }

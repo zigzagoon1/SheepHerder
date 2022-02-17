@@ -31,7 +31,7 @@ public class LaunchRock : MonoBehaviour
         {
             GameObject rock = Instantiate(rockPrefab, transform.position, transform.rotation);
             Rigidbody rockRB = rock.GetComponent<Rigidbody>();
-            rockRB.AddRelativeForce(new Vector3(0, 0, launchVelocity), ForceMode.Impulse);
+            rockRB.AddRelativeForce(Vector3.forward * launchVelocity, ForceMode.Impulse);
             rockRB.drag = drag;
             if (rockCount == 0)
             {
@@ -45,8 +45,8 @@ public class LaunchRock : MonoBehaviour
         else
         {
             rockCount = rocks.Count<GameObject>();
-            rocks[counter].transform.SetPositionAndRotation(transform.position, transform.rotation);
-            rocks[counter].GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0, 0, launchVelocity), ForceMode.Impulse);
+            rocks[counter].transform.SetPositionAndRotation(transform.position, Quaternion.identity);
+            rocks[counter].GetComponent<Rigidbody>().AddForce(transform.forward * launchVelocity, ForceMode.Impulse);
             rocks[counter].GetComponent<Rigidbody>().drag = drag;
             counter++;
         }

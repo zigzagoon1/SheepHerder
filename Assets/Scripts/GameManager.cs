@@ -5,25 +5,78 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    //
     #region Singleton
     public static GameManager instance;
 
     private void Awake()
     {
-        instance = this;
+        if (instance != null && instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            instance = this;
+        }
+        playerInput = new Controls();
     }
     #endregion
 
-    public Level[] levels;
-    [SerializeField] Level currentLevel;
-    public Enemy[] currentEnemies;
+    Controls playerInput;
+    public static bool GamePaused = false;
 
-    SceneManager sceneManager;
+    public List<Level> levels;
+    public Level currentLevel;
 
-/*    private void Start()
+    public GameObject pauseMenu;
+
+    private void OnEnable()
     {
-        
-        //currentEnemies = currentLevel.enemies;
-    }*/
-    
+        playerInput.Enable();
+    }
+
+    private void OnDisable()
+    {
+        playerInput.Disable();
+    }
+
+    private void Start()
+    {
+    }
+    public void LoadSceneByName(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+        if (sceneName.Contains("Level"))
+        {
+            currentLevel = levels.Find(x => x.name == sceneName);
+        }
+    }
+
+    public void OnPauseGame()
+    {
+        Debug.Log("Game paused");
+        pauseMenu.SetActive(true);
+        GamePaused = true;
+        Time.timeScale = 0f;
+
+    }
+
+    public void ResumeGame()
+    {
+        pauseMenu.SetActive(false);
+        GamePaused = false;
+        Time.timeScale = 1f;
+    }
+
+    public void LoadSettingsMenu()
+    {
+        //open settings menu
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
 }

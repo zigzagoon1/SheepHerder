@@ -5,6 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "SpeedSO")]
 public class SpeedSO : ScriptableObject
 {
-    [SerializeField] int _value;
-    public int Value { get { return _value; } }
+    [SerializeField] float _value;
+    public float Value { get { return _value; } set { _value = value; } }
 }

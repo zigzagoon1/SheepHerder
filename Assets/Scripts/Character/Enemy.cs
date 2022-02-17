@@ -170,7 +170,6 @@ public class Enemy : MonoBehaviour, ICharacter
         {
             if (target != null)
             {
-                //_agent.CalculatePath(target.transform.position, targetPath);
                 _agent.SetDestination(target.transform.position);
                 _agent.isStopped = false;
                 if (Vector3.Distance(transform.position, target.transform.position) < 3f)
@@ -203,11 +202,9 @@ public class Enemy : MonoBehaviour, ICharacter
         {
             _currentState = _attack;
             Debug.Log("enter attack state");
-            if (target == player)
-            {
-                
-            }
-            else
+            target.GetComponent<HitCount>().Value += 1;
+            //will be switching to event 
+            if (target != player)
             {
                 target.GetComponent<Sheep>().attacker = this.gameObject;
                 target.GetComponent<Sheep>().attackerDirection = transform.position - chaseStartLocation;
@@ -220,28 +217,19 @@ public class Enemy : MonoBehaviour, ICharacter
             {
                 fsm.TransitionTo(_chase);
             }
+            //add code to play attack animation
 
             if (Vector3.Distance(transform.position, target.transform.position) < 3f)
             {
                 if (attackCooldownInactive)
                 {
-                    if (target == player)
+                    if (target != null)
                     {
-                        target.GetComponent<PlayerController>().hitCount++;
-                        StartCoroutine(Timer());
-                    }
-                    else
-                    {
-                        target.GetComponent<Sheep>().HitCount++;
-                        Debug.Log(target.GetComponent<Sheep>().HitCount);
-                        StartCoroutine(Timer());
+                        target.GetComponent<HitCount>().Value++;
+                        //trigger event to give sheep direction for flee
                     }
                 }
             }
-
-
-            //code to play attack animation, add to player/sheep hitCount for each attack
-
             if (_hitCount >= _hitsToDefeat)
             {
                 fsm.TransitionTo(_die);

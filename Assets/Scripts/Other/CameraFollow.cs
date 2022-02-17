@@ -9,6 +9,7 @@ public class CameraFollow : MonoBehaviour
     public GameObject player;
     public Vector3 offset;
     
+    
     private bool _isNearRightEdge = false;
     private bool _isNearLeftEdge = false;
     private bool _isNearTopEdge = false;
@@ -19,6 +20,10 @@ public class CameraFollow : MonoBehaviour
     public bool IsNearTopEdge { get { return _isNearTopEdge; } set { _isNearTopEdge = value; } }
     public bool IsNearBottomEdge { get { return _isNearBottomEdge; } set { _isNearBottomEdge = value; } }
 
+    private void Start()
+    {
+        player = FindObjectOfType<PlayerController>().gameObject;
+    }
     private void LateUpdate()
     {
         if (IsNearRightEdge)

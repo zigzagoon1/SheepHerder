@@ -6,16 +6,18 @@ using UnityEngine.AI;
 public class Sheep : MonoBehaviour, ICharacter
 {
     public GameObject player;
-    public Vector3 attackerDirection;
+    public GameObject attacker = null;
 
+    public Vector3 attackerDirection;
 
     public HitsToDefeat hitsToDefeat;
     public SpeedSO speed;
     public SpeedSO fleeSpeed;
+    public int HitCount; //{ get { return _hitCount; } set { _hitCount = value; } }
 
-    public int _hitCount;
+    private float _speed;
 
-
+    int _hitCount;
     FSM fsm;
     FSM.State _follow;
     FSM.State _flee;
@@ -23,24 +25,22 @@ public class Sheep : MonoBehaviour, ICharacter
     FSM.State _die;
     FSM.State _currentState;
 
-    public int HitCount { get { return _hitCount; } set { _hitCount = value; } }
     [SerializeField] float wanderTime;
     [SerializeField] float wanderRadius;
+    float timer;
     [SerializeField] float followTime;
+
     [SerializeField] float fleeTimer;
     [SerializeField] float fleeTimerEnd;
-    public GameObject attacker;
-    float timer;
     [SerializeField] bool isFleeing = false;
 
     Animator animator;
     NavMeshAgent agent;
     
-    int _hitsToDefeat;
     int previousHitCount;
-    float _speed;
     private void Start()
     {
+        _hitCount = GetComponent<HitCount>().Value;
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         _flee = FSM_Flee;
@@ -51,10 +51,9 @@ public class Sheep : MonoBehaviour, ICharacter
         fsm.OnSpawn(_wander);
         timer = wanderTime;
         _speed = speed.Value;
-        _hitsToDefeat = hitsToDefeat.Value;
         
     }
-    private void Update()
+    private void LateUpdate()
     {
         fsm.OnUpdate();
     }
@@ -63,12 +62,17 @@ public class Sheep : MonoBehaviour, ICharacter
     {
         if (step == FSM.Step.Enter)
         {
-            //establish point in opposite direction of attack direction
-            previousHitCount = HitCount;
             _currentState = _flee;
-            animator.SetBool("isRunning", true);
+            //keep track of previous hit count in order to restart flee timer if attacked again
+            previousHitCount = _hitCount;
             fleeTimerEnd = Random.Range(3.5f, 6);
-            agent.speed = fleeSpeed.Value;
+
+            //set speed to flee speed
+            animator.SetBool("isRunning", true);
+            _speed = fleeSpeed.Value;
+            agent.speed = _speed;
+
+            //establish point in opposite direction of attack direction
             attackerDirection = transform.position - attacker.transform.position;
             StartCoroutine(Timer());
 
@@ -85,7 +89,7 @@ public class Sheep : MonoBehaviour, ICharacter
             {
                 agent.Move(Vector3.forward);
             }
-            if (HitCount > previousHitCount)
+            if (_hitCount > previousHitCount)
             {
                 StopCoroutine(Timer());
                 StartCoroutine(Timer());
@@ -100,7 +104,7 @@ public class Sheep : MonoBehaviour, ICharacter
             {
                 fsm.TransitionTo(_follow);
             }
-            if (_hitCount >= _hitsToDefeat)
+            if (_hitCount >= hitsToDefeat.Value)
             {
                 fsm.TransitionTo(_die);
             }
@@ -134,7 +138,7 @@ public class Sheep : MonoBehaviour, ICharacter
             {
                 fsm.TransitionTo(_flee);
             }
-            if (_hitCount >= _hitsToDefeat)
+            if (_hitCount >= hitsToDefeat.Value)
             {
                 fsm.TransitionTo(_die);
             }
@@ -142,7 +146,7 @@ public class Sheep : MonoBehaviour, ICharacter
         }
         if (step == FSM.Step.Exit)
         {
-            animator.SetBool("isWalking", false);
+            //animator.SetBool("isWalking", false);
             //return to wander after 3-4 seconds, or transition to flee if attacked
         }
 
@@ -151,6 +155,7 @@ public class Sheep : MonoBehaviour, ICharacter
     {
         if (step == FSM.Step.Enter)
         {
+
             _currentState = _wander;
             Debug.Log("sheep is wandering");
             timer = wanderTime;
@@ -173,19 +178,20 @@ public class Sheep : MonoBehaviour, ICharacter
             {
                 fsm.TransitionTo(_follow);
             }
+            //if sheep is hit by enemy or player, transition to flee
             if (attacker != null)
             {
                 fsm.TransitionTo(_flee);
             }
-            //if sheep is hit by enemy or player, transition to flee
-            if (_hitCount >= _hitsToDefeat)
+            
+            if (_hitCount >= hitsToDefeat.Value)
             {
                 fsm.TransitionTo(_die);
             }
         }
         if (step == FSM.Step.Exit)
         {
-            animator.SetBool("isWalking", false);
+            //animator.SetBool("isWalking", false);
         }
     }
     public void FSM_Die(FSM fsm, FSM.Step step, FSM.State state)
@@ -203,6 +209,11 @@ public class Sheep : MonoBehaviour, ICharacter
         {
             //
         }
+    }
+
+    public void AddToHitCount()
+    {
+        HitCount++;
     }
     public Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
     {

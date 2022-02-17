@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [CreateAssetMenu()]
 public class Level : ScriptableObject
 {
+    public string sceneName;
     public int levelNumber;
-    public int enemyCount;
     public EnemyType[] enemies;
     public Transform[] enemyStartPositions;
     //map/terrain/layout
@@ -14,8 +15,7 @@ public class Level : ScriptableObject
 
     private void Awake()
     {
-        enemies = new EnemyType[enemyCount];
-        enemyStartPositions = new Transform[enemyCount];
+        
 
     }
 }

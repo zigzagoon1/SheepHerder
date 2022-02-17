@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Scripts/Controls.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Scripts/System/Controls.inputactions'
 
 using System;
 using System.Collections;
@@ -38,6 +38,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""name"": ""RingBell"",
                     ""type"": ""Button"",
                     ""id"": ""e9aa8071-7cf8-4c1a-a167-f77368a85d41"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""PauseGame"",
+                    ""type"": ""Button"",
+                    ""id"": ""8ddc5296-fbe3-4389-81f3-9ed36c4934e5"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -120,6 +128,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""RingBell"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d77b1c4a-fb00-4a9f-ad43-36622a934036"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PauseGame"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -153,6 +172,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_RingBell = m_Player.FindAction("RingBell", throwIfNotFound: true);
+        m_Player_PauseGame = m_Player.FindAction("PauseGame", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -205,6 +225,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_RingBell;
+    private readonly InputAction m_Player_PauseGame;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
@@ -212,6 +233,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @RingBell => m_Wrapper.m_Player_RingBell;
+        public InputAction @PauseGame => m_Wrapper.m_Player_PauseGame;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -230,6 +252,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @RingBell.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRingBell;
                 @RingBell.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRingBell;
                 @RingBell.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRingBell;
+                @PauseGame.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPauseGame;
+                @PauseGame.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPauseGame;
+                @PauseGame.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPauseGame;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -243,6 +268,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @RingBell.started += instance.OnRingBell;
                 @RingBell.performed += instance.OnRingBell;
                 @RingBell.canceled += instance.OnRingBell;
+                @PauseGame.started += instance.OnPauseGame;
+                @PauseGame.performed += instance.OnPauseGame;
+                @PauseGame.canceled += instance.OnPauseGame;
             }
         }
     }
@@ -261,5 +289,6 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnRingBell(InputAction.CallbackContext context);
+        void OnPauseGame(InputAction.CallbackContext context);
     }
 }
