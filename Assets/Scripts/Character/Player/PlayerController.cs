@@ -65,8 +65,6 @@ public class PlayerController : MonoBehaviour
             return;
         }
     }
-
-
     public void OnRingBell()
     {
         StartCoroutine(Timer());

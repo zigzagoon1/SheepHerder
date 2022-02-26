@@ -27,6 +27,7 @@ Shader "Roystan/Grass"
 
 		_MaxCameraDistance("Max Camera Distance Before Optimization", Float) = 10
 		_SlopeLimit("Slope Limit For Grass Creation", Float) = 0.2
+		_HeightLimit("Height Limit For Grass Creation", Float) = 0.9
 		_Radius("Interaction Radius", Float) = 0.3
 		_Strength("Interactive Strength", Float) = 5
     }
@@ -63,6 +64,7 @@ Shader "Roystan/Grass"
 	float _SlopeLimit;
 	float _Radius;
 	float _Strength;
+	float _HeightLimit;
 	// Simple noise function, sourced from http://answers.unity.com/answers/624136/view.html
 	// Extended discussion on this function can be found at the following link:
 	// https://forum.unity.com/threads/am-i-over-complicating-this-random-function.454887/#post-2949326
@@ -150,8 +152,8 @@ Shader "Roystan/Grass"
 		//float grassMask = tex2Dlod(_GrassMask,float4(pos.xz / _size,0,0));
 		//int shouldCreateGrass = sign(slope-_SlopeLimit) + sign(_maxDist-dist) + sign(pos.y - _BeachLimit) + sign(_HeightLimit- pos.y) + sign(1 - grassMask);
 		//if (shouldCreateGrass==3)
-		int shouldCreateGrass = sign(slope-_SlopeLimit) + sign(_MaxCameraDistance - distToCamera);
-		if (shouldCreateGrass == 2)
+		int shouldCreateGrass = sign(slope-_SlopeLimit) + sign(_MaxCameraDistance - distToCamera) + sign (_HeightLimit - worldPos.y);
+		if (shouldCreateGrass == 3)
 		{
 			// Construct random rotations to point the blade in a direction.
 		float3x3 facingRotationMatrix = AngleAxis3x3(rand(pos) * UNITY_TWO_PI, float3(0, 0, 1));
@@ -164,8 +166,8 @@ Shader "Roystan/Grass"
 		float4 vTangent = IN[0].tangent;
 		float3 vBinormal = cross(vNormal, vTangent) * vTangent.w;
 
-		// Construct a matrix to transform our blade from tangent space
-		// to local space; this is the same process used when sampling normal maps.
+		 //Construct a matrix to transform our blade from tangent space
+		 //to local space; this is the same process used when sampling normal maps.
 		float3x3 tangentToLocal = float3x3(
 		vTangent.x, vBinormal.x, vNormal.x,
 		vTangent.y, vBinormal.y, vNormal.y,
@@ -302,7 +304,7 @@ Shader "Roystan/Grass"
 
 				float3 ambient = ShadeSH9(float4(normal, 1));
 				float4 lightIntensity = NdotL * _LightColor0 + float4(ambient, 1);
-				float4 col = lerp(_BottomColor, _TopColor * lightIntensity, i.uv.y);
+				float4 col = lerp(_BottomColor, _TopColor * lightIntensity, 0.1);
 
 
 				float blue = (dist - 1000) / 1000;

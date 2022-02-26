@@ -43,6 +43,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        pauseMenu.SetActive(false);
+        
     }
     public void LoadSceneByName(string sceneName)
     {
@@ -50,24 +52,25 @@ public class GameManager : MonoBehaviour
         if (sceneName.Contains("Level"))
         {
             currentLevel = levels.Find(x => x.name == sceneName);
+            //instantiate level start enemy/ies here after getting random spawn location/s
         }
     }
 
     public void OnPauseGame()
     {
         Debug.Log("Game paused");
-        pauseMenu.SetActive(true);
-        GamePaused = true;
-        Time.timeScale = 0f;
-
+        pauseMenu.SetActive(!pauseMenu.activeSelf);
+        GamePaused = !GamePaused;
+        if (GamePaused == true)
+        {
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+        }
     }
 
-    public void ResumeGame()
-    {
-        pauseMenu.SetActive(false);
-        GamePaused = false;
-        Time.timeScale = 1f;
-    }
 
     public void LoadSettingsMenu()
     {

@@ -2,59 +2,66 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.InputSystem;
 
 public class CameraFollow : MonoBehaviour
 {
     public float camSpeed;
-    public GameObject player;
-    public Vector3 offset;
-    
-    
-    private bool _isNearRightEdge = false;
-    private bool _isNearLeftEdge = false;
-    private bool _isNearTopEdge = false;
-    private bool _isNearBottomEdge = false;
+    public Transform focus;
+    [SerializeField, Range(1f, 100f)] float orbitDistance;
+    [SerializeField] Vector3 offset;
+    [SerializeField, Min(0f)] float focusRadius = 5f;
 
-    public bool IsNearRightEdge { get { return _isNearRightEdge; } set { _isNearRightEdge = value; } }
-    public bool IsNearLeftEdge { get { return _isNearLeftEdge; } set { _isNearLeftEdge = value; } }
-    public bool IsNearTopEdge { get { return _isNearTopEdge; } set { _isNearTopEdge = value; } }
-    public bool IsNearBottomEdge { get { return _isNearBottomEdge; } set { _isNearBottomEdge = value; } }
+    Vector3 focusPoint;
 
+    private float inputRotation;
+    private bool rotate = false;
+    private float inputZoom;
+    private bool zoom = false;
+    private float rotationMultiplier = 3f;
+    
+
+    private void Awake()
+    {
+        focusPoint = focus.position;
+        offset = focus.transform.position - transform.position;
+    }
+    void UpdateFocusPoint()
+    {
+        Vector3 targetPoint = focus.position;
+        if (focusRadius > 0f)
+        {
+            float distance = Vector3.Distance(targetPoint, focusPoint);
+            Debug.Log(distance);
+            if (distance > focusRadius)
+            {
+                focusPoint = Vector3.Lerp(targetPoint, focusPoint, focusRadius / distance);
+            }
+        }
+        else
+        {
+            focusPoint = targetPoint;
+        }
+    }
     private void Start()
     {
-        player = FindObjectOfType<PlayerController>().gameObject;
+        focus = FindObjectOfType<PlayerController>().transform;
+    }
+
+    void OnRotateCamera(InputValue input)
+    {
+        inputRotation = input.Get<float>();
+        rotate = inputRotation == 1 || inputRotation == -1;
+    }
+    void OnZoomCamera(InputValue input)
+    {
+        inputZoom = input.Get<float>();
+        zoom = inputZoom == 1 || inputZoom == -1;
     }
     private void LateUpdate()
     {
-        if (IsNearRightEdge)
-        {
-            transform.position += camSpeed * Time.deltaTime * Vector3.right;
-        }
-        if (IsNearLeftEdge)
-        {
-            transform.position += camSpeed * Time.deltaTime * Vector3.left;
-        }
-        if (IsNearTopEdge)
-        {
-            transform.position += camSpeed * Time.deltaTime * Vector3.forward;
-
-        }
-        if (IsNearBottomEdge)
-        {
-            transform.position += camSpeed * Time.deltaTime * Vector3.back;
-        }
-        /*        Plane[] frustum = GeometryUtility.CalculateFrustumPlanes(mainCamera);
-                if (GeometryUtility.TestPlanesAABB(frustum, playerBounds))
-                {
-
-                }*/
-        /*        playerMoveDir = player.transform.position - playerPrevPos;
-                playerMoveDir = playerMoveDir.normalized;
-                if (playerMoveDir != Vector3.zero)
-                {
-                    //transform.position = Vector3.Slerp(transform.position, player.transform.position - (playerMoveDir * distance) + offset, 0.1f);
-                    transform.LookAt(player.transform.position);
-                    playerPrevPos = player.transform.position;
-                }*/
+        UpdateFocusPoint();
+        Vector3 lookDirection = Vector3.forward;
+        transform.localPosition = focusPoint - offset;
     }
 }

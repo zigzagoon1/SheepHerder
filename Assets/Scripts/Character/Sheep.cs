@@ -7,17 +7,15 @@ public class Sheep : MonoBehaviour, ICharacter
 {
     public GameObject player;
     public GameObject attacker = null;
-
     public Vector3 attackerDirection;
 
     public HitsToDefeat hitsToDefeat;
     public SpeedSO speed;
     public SpeedSO fleeSpeed;
-    public int HitCount; //{ get { return _hitCount; } set { _hitCount = value; } }
-
+    public HitCount hitCount;
     private float _speed;
-
     int _hitCount;
+
     FSM fsm;
     FSM.State _follow;
     FSM.State _flee;
@@ -27,12 +25,12 @@ public class Sheep : MonoBehaviour, ICharacter
 
     [SerializeField] float wanderTime;
     [SerializeField] float wanderRadius;
-    float timer;
     [SerializeField] float followTime;
 
     [SerializeField] float fleeTimer;
     [SerializeField] float fleeTimerEnd;
     [SerializeField] bool isFleeing = false;
+    float timer;
 
     Animator animator;
     NavMeshAgent agent;
@@ -53,7 +51,7 @@ public class Sheep : MonoBehaviour, ICharacter
         _speed = speed.Value;
         
     }
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         fsm.OnUpdate();
     }
@@ -209,11 +207,6 @@ public class Sheep : MonoBehaviour, ICharacter
         {
             //
         }
-    }
-
-    public void AddToHitCount()
-    {
-        HitCount++;
     }
     public Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
     {

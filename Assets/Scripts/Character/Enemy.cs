@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour, ICharacter
 {
-
-    public int _hitCount;
+    public HitCount hitCount;
+    [SerializeField] int _hitCount;
     [SerializeField] EnemyType type;
 
     [SerializeField] float wanderTimer, wanderRadius, distanceMultiplier, _speed;
@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour, ICharacter
     //destination points for paths for the enemy to walk along
     [SerializeField] Transform[] waypoints;
 
-    [SerializeField] GameObject target = null, player;
+    [SerializeField] GameObject target = null;
 
     //increasing or decreasing this variable affects the total cooldown time before player can reuse attack
     [SerializeField] float attackCooldown;
@@ -34,27 +34,36 @@ public class Enemy : MonoBehaviour, ICharacter
     float newPathTimer = 0;
     float radius = 15f;
     Sheep[] activeSheep;
+    [SerializeField] GameObject player;
     Vector3 chaseStartLocation;
 
     private void Start()
     {
-        _hitCount = 0;
+        _hitCount = hitCount.Value;
+        player = FindObjectOfType<PlayerController>().gameObject;
         _speed = type.baseSpeed.Value;
         _hitsToDefeat = type.hitsToDefeat.Value;
         _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
         patrolPathA = new NavMeshPath();
         patrolPathB = new NavMeshPath();
-        _patrol = FSM_Patrol;
+       // _patrol = FSM_Patrol;
         _chase = FSM_Chase;
         _attack = FSM_Attack;
         _die = FSM_Die;
         fsm = new FSM();
-        fsm.OnSpawn(_patrol);
+        fsm.OnSpawn(_chase);
     }
     private void Awake()
     {
         activeSheep = FindObjectsOfType<Sheep>();
+    }
+
+    //set event to update when a sheep is destroyed
+    public void UpdateActiveSheep(GameObject sheep)
+    {
+        activeSheep = FindObjectsOfType<Sheep>();
+        Debug.Log(activeSheep.Length);
     }
     private void FixedUpdate()
     {
@@ -62,39 +71,14 @@ public class Enemy : MonoBehaviour, ICharacter
     }
     void FSM_Patrol(FSM fsm, FSM.Step step, FSM.State state)
     {
-        
+
         if (step == FSM.Step.Enter)
         {
             _agent.ResetPath();
-            
+
             if (target != null)
             {
                 target = null;
-            }
-            if (_agent.transform.position == waypoints[0].position)
-            {
-                _agent.CalculatePath(waypoints[1].position, patrolPathB);
-                _agent.SetPath(patrolPathB);
-            }
-            else if (_agent.transform.position == waypoints[1].position)
-            {
-                _agent.CalculatePath(waypoints[0].position, patrolPathA);
-                _agent.SetPath(patrolPathA);
-            }
-            else
-            {
-                float distance = Vector3.Distance(transform.position, waypoints[0].transform.position);
-                float distance2 = Vector3.Distance(transform.position, waypoints[1].transform.position);
-                if (distance < distance2)
-                {
-                    _agent.CalculatePath(waypoints[0].position, patrolPathA);
-                    _agent.SetPath(patrolPathA);
-                }
-                else
-                {
-                    _agent.CalculatePath(waypoints[1].transform.position, patrolPathB);
-                    _agent.SetPath(patrolPathB);
-                }
             }
             _agent.speed = _speed;
             _currentState = _patrol;
@@ -102,50 +86,28 @@ public class Enemy : MonoBehaviour, ICharacter
         }
         if (step == FSM.Step.Update)
         {
-            
-
-            if (_agent.transform.position == _agent.pathEndPosition)
-            {
-                newPathTimer += Time.deltaTime;
-                if (newPathTimer > 1)
-                {
-                    fsm.TransitionTo(_patrol);
-                    newPathTimer = 0;
-                }
-            }
-            
             if (target == null)
             {
-                if (Vector3.Distance(player.transform.position, transform.position) < radius)
+                for (int i = 0; i < activeSheep.Length; i++)
                 {
-                    target = player;
-                    fsm.TransitionTo(_chase);
-                }
-            }
-
-            for (int i = 0; i < activeSheep.Length; i++)
-            {
-                if (Vector3.Distance(activeSheep[i].transform.position, transform.position) < radius)
-                {
-                    if (_hitCount > 0)
+                    if (Vector3.Distance(activeSheep[i].transform.position, transform.position) < radius)
                     {
-                        break;
+                        if (_hitCount > 0)
+                        {
+                            target = player;
+                            fsm.TransitionTo(_chase);
+                            break;
+                        }
+                        target = activeSheep[i].gameObject;
+                        fsm.TransitionTo(_chase);
                     }
-                    target = activeSheep[i].gameObject;
-                    fsm.TransitionTo(_chase);
+                    if (Vector3.Distance(player.transform.position, transform.position) < radius)
+                    {
+                        target = player;
+                        fsm.TransitionTo(_chase);
+                    }
                 }
             }
-/*            if (isWandering && _agent != null)
-            {
-                timer += Time.deltaTime;
-                if (timer >= wanderTimer)
-                {
-                    Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
-                    _agent.SetDestination(newPos);
-                    timer = 0;
-                }
-            }*/
-            
             if (_hitCount >= _hitsToDefeat)
             {
                 fsm.TransitionTo(_die);
@@ -153,7 +115,7 @@ public class Enemy : MonoBehaviour, ICharacter
         }
         if (step == FSM.Step.Exit)
         {
-            _agent.isStopped = true;
+            _agent.isStopped= true;
             _agent.ResetPath();
         }
     }
@@ -161,14 +123,47 @@ public class Enemy : MonoBehaviour, ICharacter
     {
         if (step == FSM.Step.Enter)
         {
-            _agent.speed = 2.5f;
+            _agent.speed = _speed;
+            _agent.stoppingDistance = 3f;
             _currentState = _chase;
             Debug.Log("enter chase state");
             chaseStartLocation = transform.position;
+
         }
         if (step == FSM.Step.Update)
         {
-            if (target != null)
+
+            Vector3 playerPos = player.transform.position;
+
+            _agent.SetDestination(playerPos); 
+
+            if (Vector3.Distance(transform.position, playerPos) > 3 && Vector3.Distance(transform.position, playerPos) < radius)
+            {
+                //animation/s for wolf approaching?? 
+            }
+            if (target == null)
+            {
+                for (int i = 0; i < activeSheep.Length; i++)
+                {
+                    if (Vector3.Distance(transform.position, activeSheep[i].transform.position) <= _agent.stoppingDistance)
+                    {
+                        target = activeSheep[i].gameObject;
+                        fsm.TransitionTo(_attack);
+                    }
+                }
+                if (Vector3.Distance(transform.position, playerPos) <= radius)
+                {
+                    target = player;
+                }
+            }
+            else
+            {
+                fsm.TransitionTo(_attack);
+            }
+
+            
+
+ /*           if (target != null)
             {
                 _agent.SetDestination(target.transform.position);
                 _agent.isStopped = false;
@@ -184,7 +179,7 @@ public class Enemy : MonoBehaviour, ICharacter
                 {
                     fsm.TransitionTo(_die);
                 }
-            }
+            }*/
 
             
         }

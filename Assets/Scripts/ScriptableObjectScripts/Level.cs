@@ -8,7 +8,7 @@ public class Level : ScriptableObject
 {
     public string sceneName;
     public int levelNumber;
-    public EnemyType[] enemies;
+    public EnemyType[] enemiesAtStart;
     public Transform[] enemyStartPositions;
     //map/terrain/layout
     //UI Display Info variable (to display timer or no timer or any level-specific info)
