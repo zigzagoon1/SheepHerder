@@ -10,6 +10,7 @@ public class Level : ScriptableObject
     public int levelNumber;
     public EnemyType[] enemiesAtStart;
     public Transform[] enemyStartPositions;
+    public int sheepCount;
     //map/terrain/layout
     //UI Display Info variable (to display timer or no timer or any level-specific info)
 

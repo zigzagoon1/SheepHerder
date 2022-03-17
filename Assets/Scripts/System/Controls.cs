@@ -41,30 +41,6 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
-                },
-                {
-                    ""name"": ""PauseGame"",
-                    ""type"": ""Button"",
-                    ""id"": ""8ddc5296-fbe3-4389-81f3-9ed36c4934e5"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""RotateCamera"",
-                    ""type"": ""Button"",
-                    ""id"": ""30016bf5-0416-4975-99c6-5b5ff0ed766b"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""ZoomCamera"",
-                    ""type"": ""Button"",
-                    ""id"": ""b368cc08-5c76-4b11-b78e-ec8bb42a881b"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -144,22 +120,35 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""RingBell"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
+                }
+            ]
+        },
+        {
+            ""name"": ""Camera"",
+            ""id"": ""5fb05297-fb8f-4bf1-ac05-f5706298b966"",
+            ""actions"": [
                 {
-                    ""name"": """",
-                    ""id"": ""d77b1c4a-fb00-4a9f-ad43-36622a934036"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
+                    ""name"": ""RotateCamera"",
+                    ""type"": ""Button"",
+                    ""id"": ""a7654210-6f3a-46be-85cd-e5faa1487a25"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""PauseGame"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
+                    ""interactions"": """"
                 },
                 {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""4d1a856e-d493-482f-9b9e-5d1eaf92603a"",
-                    ""path"": ""1DAxis"",
+                    ""name"": ""ZoomCamera"",
+                    ""type"": ""Button"",
+                    ""id"": ""0f22da97-21c9-4e1a-b230-df70176d6d5f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""Left/Right"",
+                    ""id"": ""7cff9043-aafa-4ce9-8654-1a3757e5e81c"",
+                    ""path"": ""1DAxis(whichSideWins=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -169,7 +158,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""negative"",
-                    ""id"": ""23e1547a-180b-4475-970c-9299ea5bd7d7"",
+                    ""id"": ""45a2febf-291b-481d-9701-1be54590d943"",
                     ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -180,7 +169,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""positive"",
-                    ""id"": ""67b5f6f5-ed45-4a7d-8830-16f43d5f27ac"",
+                    ""id"": ""109ad49a-91db-454d-96d0-ccc059caaa6c"",
                     ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -190,37 +179,64 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""1eaf5953-72d3-4e15-9594-3ccd151a43aa"",
-                    ""path"": ""1DAxis"",
+                    ""name"": ""Up/Down"",
+                    ""id"": ""fa10bf62-8478-40d5-802b-bf8cfba4d632"",
+                    ""path"": ""1DAxis(whichSideWins=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ZoomCamera"",
+                    ""action"": ""RotateCamera"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""negative"",
-                    ""id"": ""8fcaab4d-a5a6-4adb-a1f6-9bfeb04bc35f"",
+                    ""name"": ""positive"",
+                    ""id"": ""0fe59996-98b1-47b9-b1e2-26e0ea216a58"",
                     ""path"": ""<Keyboard>/upArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ZoomCamera"",
+                    ""action"": ""RotateCamera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""positive"",
-                    ""id"": ""6acbffce-f18e-467b-ab38-b937480c5f54"",
+                    ""name"": ""negative"",
+                    ""id"": ""516dcf08-8df7-4562-b528-85a4ee314f4f"",
                     ""path"": ""<Keyboard>/downArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ZoomCamera"",
+                    ""action"": ""RotateCamera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                }
+            ]
+        },
+        {
+            ""name"": ""GameManager"",
+            ""id"": ""953c9a58-0dfa-425a-b96b-136cc5232a7a"",
+            ""actions"": [
+                {
+                    ""name"": ""PauseGame"",
+                    ""type"": ""Button"",
+                    ""id"": ""34ad765f-8846-44d7-b31d-c5b692a79b81"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""d8fae81d-1344-4e63-89db-050c7e5cd1c0"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PauseGame"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -254,9 +270,13 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_RingBell = m_Player.FindAction("RingBell", throwIfNotFound: true);
-        m_Player_PauseGame = m_Player.FindAction("PauseGame", throwIfNotFound: true);
-        m_Player_RotateCamera = m_Player.FindAction("RotateCamera", throwIfNotFound: true);
-        m_Player_ZoomCamera = m_Player.FindAction("ZoomCamera", throwIfNotFound: true);
+        // Camera
+        m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
+        m_Camera_RotateCamera = m_Camera.FindAction("RotateCamera", throwIfNotFound: true);
+        m_Camera_ZoomCamera = m_Camera.FindAction("ZoomCamera", throwIfNotFound: true);
+        // GameManager
+        m_GameManager = asset.FindActionMap("GameManager", throwIfNotFound: true);
+        m_GameManager_PauseGame = m_GameManager.FindAction("PauseGame", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -309,9 +329,6 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_RingBell;
-    private readonly InputAction m_Player_PauseGame;
-    private readonly InputAction m_Player_RotateCamera;
-    private readonly InputAction m_Player_ZoomCamera;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
@@ -319,9 +336,6 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @RingBell => m_Wrapper.m_Player_RingBell;
-        public InputAction @PauseGame => m_Wrapper.m_Player_PauseGame;
-        public InputAction @RotateCamera => m_Wrapper.m_Player_RotateCamera;
-        public InputAction @ZoomCamera => m_Wrapper.m_Player_ZoomCamera;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -340,15 +354,6 @@ public class @Controls : IInputActionCollection, IDisposable
                 @RingBell.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRingBell;
                 @RingBell.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRingBell;
                 @RingBell.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRingBell;
-                @PauseGame.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPauseGame;
-                @PauseGame.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPauseGame;
-                @PauseGame.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPauseGame;
-                @RotateCamera.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotateCamera;
-                @RotateCamera.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotateCamera;
-                @RotateCamera.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotateCamera;
-                @ZoomCamera.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnZoomCamera;
-                @ZoomCamera.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnZoomCamera;
-                @ZoomCamera.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnZoomCamera;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -362,9 +367,41 @@ public class @Controls : IInputActionCollection, IDisposable
                 @RingBell.started += instance.OnRingBell;
                 @RingBell.performed += instance.OnRingBell;
                 @RingBell.canceled += instance.OnRingBell;
-                @PauseGame.started += instance.OnPauseGame;
-                @PauseGame.performed += instance.OnPauseGame;
-                @PauseGame.canceled += instance.OnPauseGame;
+            }
+        }
+    }
+    public PlayerActions @Player => new PlayerActions(this);
+
+    // Camera
+    private readonly InputActionMap m_Camera;
+    private ICameraActions m_CameraActionsCallbackInterface;
+    private readonly InputAction m_Camera_RotateCamera;
+    private readonly InputAction m_Camera_ZoomCamera;
+    public struct CameraActions
+    {
+        private @Controls m_Wrapper;
+        public CameraActions(@Controls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @RotateCamera => m_Wrapper.m_Camera_RotateCamera;
+        public InputAction @ZoomCamera => m_Wrapper.m_Camera_ZoomCamera;
+        public InputActionMap Get() { return m_Wrapper.m_Camera; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CameraActions set) { return set.Get(); }
+        public void SetCallbacks(ICameraActions instance)
+        {
+            if (m_Wrapper.m_CameraActionsCallbackInterface != null)
+            {
+                @RotateCamera.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnRotateCamera;
+                @RotateCamera.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnRotateCamera;
+                @RotateCamera.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnRotateCamera;
+                @ZoomCamera.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomCamera;
+                @ZoomCamera.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomCamera;
+                @ZoomCamera.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnZoomCamera;
+            }
+            m_Wrapper.m_CameraActionsCallbackInterface = instance;
+            if (instance != null)
+            {
                 @RotateCamera.started += instance.OnRotateCamera;
                 @RotateCamera.performed += instance.OnRotateCamera;
                 @RotateCamera.canceled += instance.OnRotateCamera;
@@ -374,7 +411,40 @@ public class @Controls : IInputActionCollection, IDisposable
             }
         }
     }
-    public PlayerActions @Player => new PlayerActions(this);
+    public CameraActions @Camera => new CameraActions(this);
+
+    // GameManager
+    private readonly InputActionMap m_GameManager;
+    private IGameManagerActions m_GameManagerActionsCallbackInterface;
+    private readonly InputAction m_GameManager_PauseGame;
+    public struct GameManagerActions
+    {
+        private @Controls m_Wrapper;
+        public GameManagerActions(@Controls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @PauseGame => m_Wrapper.m_GameManager_PauseGame;
+        public InputActionMap Get() { return m_Wrapper.m_GameManager; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(GameManagerActions set) { return set.Get(); }
+        public void SetCallbacks(IGameManagerActions instance)
+        {
+            if (m_Wrapper.m_GameManagerActionsCallbackInterface != null)
+            {
+                @PauseGame.started -= m_Wrapper.m_GameManagerActionsCallbackInterface.OnPauseGame;
+                @PauseGame.performed -= m_Wrapper.m_GameManagerActionsCallbackInterface.OnPauseGame;
+                @PauseGame.canceled -= m_Wrapper.m_GameManagerActionsCallbackInterface.OnPauseGame;
+            }
+            m_Wrapper.m_GameManagerActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @PauseGame.started += instance.OnPauseGame;
+                @PauseGame.performed += instance.OnPauseGame;
+                @PauseGame.canceled += instance.OnPauseGame;
+            }
+        }
+    }
+    public GameManagerActions @GameManager => new GameManagerActions(this);
     private int m_switchpcSchemeIndex = -1;
     public InputControlScheme switchpcScheme
     {
@@ -389,8 +459,14 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnRingBell(InputAction.CallbackContext context);
-        void OnPauseGame(InputAction.CallbackContext context);
+    }
+    public interface ICameraActions
+    {
         void OnRotateCamera(InputAction.CallbackContext context);
         void OnZoomCamera(InputAction.CallbackContext context);
+    }
+    public interface IGameManagerActions
+    {
+        void OnPauseGame(InputAction.CallbackContext context);
     }
 }

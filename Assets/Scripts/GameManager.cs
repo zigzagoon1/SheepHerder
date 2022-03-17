@@ -2,13 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
     //
     #region Singleton
     public static GameManager instance;
+    public List<Sheep> activeSheep;
+    public List<Wolf> activeWolves;
+    public delegate void OnUpdateSheep();
+    public delegate void OnUpdateWolves();
+    public OnUpdateSheep onUpdateSheepCallback;
+    public OnUpdateWolves onUpdateWolvesCallback;
 
+    private void OnEnable()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            instance = this;
+        }
+    }
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -19,19 +38,20 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
-        playerInput = new Controls();
+        activeSheep = FindObjectsOfType<Sheep>().ToList<Sheep>();
+        activeWolves = FindObjectsOfType<Wolf>().ToList<Wolf>();
     }
     #endregion
 
     Controls playerInput;
     public static bool GamePaused = false;
 
-    public List<Level> levels;
+    public static List<Level> levels;
     public Level currentLevel;
 
     public GameObject pauseMenu;
 
-    private void OnEnable()
+/*    private void OnEnable()
     {
         playerInput.Enable();
     }
@@ -40,7 +60,7 @@ public class GameManager : MonoBehaviour
     {
         playerInput.Disable();
     }
-
+*/
     private void Start()
     {
         pauseMenu.SetActive(false);
@@ -71,6 +91,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void UpdateActiveSheep()
+    {
+        activeSheep = FindObjectsOfType<Sheep>().ToList<Sheep>();
+        onUpdateSheepCallback.Invoke();
+    }
+
+    public void UpdateActiveWolves()
+    {
+        activeWolves = FindObjectsOfType<Wolf>().ToList<Wolf>();
+        onUpdateWolvesCallback.Invoke();
+    }
+    public void LevelComplete()
+    {
+        Time.timeScale = 0;
+        Debug.Log("Level Complete!");
+        //show level complete text
+    }
 
     public void LoadSettingsMenu()
     {

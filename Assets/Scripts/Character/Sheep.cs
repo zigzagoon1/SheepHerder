@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Sheep : MonoBehaviour, ICharacter
+public class Sheep : MonoBehaviour
 {
     public GameObject player;
     public GameObject attacker = null;
@@ -30,7 +30,8 @@ public class Sheep : MonoBehaviour, ICharacter
     [SerializeField] float fleeTimer;
     [SerializeField] float fleeTimerEnd;
     [SerializeField] bool isFleeing = false;
-    float timer;
+    float wanderTimer;
+    Timer timer;
 
     Animator animator;
     NavMeshAgent agent;
@@ -41,13 +42,14 @@ public class Sheep : MonoBehaviour, ICharacter
         _hitCount = GetComponent<HitCount>().Value;
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        timer = FindObjectOfType<Timer>();
         _flee = FSM_Flee;
         _follow = FSM_Follow;
         _wander = FSM_Wander;
         _die = FSM_Die;
         fsm = new FSM();
         fsm.OnSpawn(_wander);
-        timer = wanderTime;
+        wanderTimer = wanderTime;
         _speed = speed.Value;
         
     }
@@ -72,7 +74,7 @@ public class Sheep : MonoBehaviour, ICharacter
 
             //establish point in opposite direction of attack direction
             attackerDirection = transform.position - attacker.transform.position;
-            StartCoroutine(Timer());
+            timer.StartCoroutine(timer.FleeTimer(fleeTimerEnd));
 
             Debug.Log("sheep entered flee state");
             
@@ -89,8 +91,9 @@ public class Sheep : MonoBehaviour, ICharacter
             }
             if (_hitCount > previousHitCount)
             {
-                StopCoroutine(Timer());
-                StartCoroutine(Timer());
+                timer.StopCoroutine(timer.FleeTimer(fleeTimerEnd));
+                timer.StartCoroutine(timer.FleeTimer(fleeTimerEnd));
+
                 agent.SetDestination(attacker.transform.position + (attackerDirection * 10));
             }
             if (!isFleeing)
@@ -119,16 +122,16 @@ public class Sheep : MonoBehaviour, ICharacter
         {
             _currentState = _follow;
             Debug.Log("sheep is following player");
-            timer = 0;
+            wanderTimer = 0;
             animator.SetBool("isWalking", true);
         }
         if (step == FSM.Step.Update)
         {
             //begin movement to player position
-            timer += Time.deltaTime;
+            wanderTimer += Time.deltaTime;
             agent.speed = _speed;
             agent.SetDestination(player.transform.position);
-            if (timer >= followTime)
+            if (wanderTimer >= followTime)
             {
                 fsm.TransitionTo(_wander);
             }
@@ -156,20 +159,20 @@ public class Sheep : MonoBehaviour, ICharacter
 
             _currentState = _wander;
             Debug.Log("sheep is wandering");
-            timer = wanderTime;
+            wanderTimer = wanderTime;
             animator.SetBool("isWalking", true);
         }
         if (step == FSM.Step.Update)
         {
             if (agent != null)
             {
-                timer += Time.deltaTime;
-                if (timer >= wanderTime)
+                wanderTimer += Time.deltaTime;
+                if (wanderTimer >= wanderTime)
                 {
                     Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
                     agent.speed = _speed;
                     agent.SetDestination(newPos);
-                    timer = 0;
+                    wanderTimer = 0;
                 }
             }
             if (player.GetComponent<PlayerController>().followBell)
@@ -216,23 +219,15 @@ public class Sheep : MonoBehaviour, ICharacter
         NavMesh.SamplePosition(randDirection, out NavMeshHit navHit, dist, layermask);
         return navHit.position;
     }
-    private IEnumerator Timer()
-    {
-        fleeTimer = 0;
-        isFleeing = true;
-
-        while (fleeTimer < fleeTimerEnd)
-        {
-            fleeTimer += Time.deltaTime;
-            yield return null;
-        }
-        isFleeing = false;
-    }
     public IEnumerator FaceTarget()
     {
         Vector3 direction = (player.transform.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5);
         yield return null;
+    }
+    private void OnDestroy()
+    {
+        GameManager.instance.UpdateActiveSheep();
     }
 }

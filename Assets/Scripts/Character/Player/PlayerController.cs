@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Runtime.CompilerServices;
+using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
     public float radius;
     public float attackCooldown;
-    public float timer;
     public float bellTimer;
     public bool followBell = false;
 
@@ -20,40 +20,52 @@ public class PlayerController : MonoBehaviour
     [SerializeField] HitsToDefeat hitsToDefeat;
     [SerializeField] SpeedSO speed;
     [SerializeField] float rotationSpeed;
-    private Controls controls;
+    [SerializeField] Transform playerInputSpace = default;
+
     private CharacterController playerController;
+    //private NavMeshAgent agent;
     private Vector3 move;
     private readonly float gravity = -3f;
     private bool attackCooldownActive;
-    private void Awake()
-    {
-        controls = new Controls();
-    }
-    private void OnEnable()
-    {
-        controls.Enable();
-    }
-    private void OnDisable()
-    {
-        controls.Disable();
-    }
+    private Vector3 desiredVelocity;
+    private Timer timer;
     private void Start()
     {
         playerController = GetComponent<CharacterController>();
+        timer = FindObjectOfType<Timer>();
+        //agent = GetComponent<NavMeshAgent>();
+        //agent.speed = speed.Value;
         attackCooldownActive = false;
     }
     public void OnMove(InputValue input)
     {
         Vector2 inputVec = input.Get<Vector2>();
-        move = new Vector3(inputVec.x, gravity, inputVec.y);
+        if (playerInputSpace)
+        {
+            if (playerInputSpace)
+            {
+                Vector3 forward = playerInputSpace.forward;
+                forward.y = 0f;
+                forward.Normalize();
+                Vector3 right = playerInputSpace.right;
+                right.y = 0f;
+                right.Normalize();
+                move = (forward * inputVec.y + right * inputVec.x) * speed.Value;
+                move.y = gravity * speed.Value;
+            }
+        }
+        else
+        {
+            move = new Vector3(inputVec.x, gravity, inputVec.y);
+        }
     }
 
     //play animation, add cooldown for attack
     public void OnAttack()
     {
-        if (attackCooldownActive == false)
+        if (timer.playerCooldownTimer == false)
         {
-            StartCoroutine(Timer());
+            timer.StartCoroutine(timer.CooldownTimer(attackCooldown, "Player"));
 
             if (onAttackCallback != null)
             {
@@ -67,12 +79,15 @@ public class PlayerController : MonoBehaviour
     }
     public void OnRingBell()
     {
-        StartCoroutine(Timer());
+        if (timer.playerCooldownTimer == false)
+        {
+            timer.StartCoroutine(timer.CooldownTimer(bellTimer, "Player"));
+        }
     }
 
 
     //timer for various cooldowns
-    public IEnumerator Timer([CallerMemberName] string callingMethod = "")
+/*    public IEnumerator Timer([CallerMemberName] string callingMethod = "")
     {
         if (callingMethod == "OnAttack")
         {
@@ -102,17 +117,19 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("no calling method name");
         }
-    }
+    }*/
+
     private void FixedUpdate()
     {
-        if (move != Vector3.zero)
+        if (move != Vector3.zero && move != null)
         {
             if (move.x != 0 || move.z != 0)
             {
+
                 transform.Rotate(new Vector3(move.x, 0, move.y) * Time.deltaTime, Space.Self);
                 transform.forward = new Vector3(move.x, 0, move.z);
             }
-            playerController.Move(move * speed.Value * Time.deltaTime);
+            playerController.Move(Time.deltaTime * move);
         }
     }
 }
