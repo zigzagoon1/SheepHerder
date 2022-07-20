@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
-using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,17 +16,6 @@ public class GameManager : MonoBehaviour
     public OnUpdateSheep onUpdateSheepCallback;
     public OnUpdateWolves onUpdateWolvesCallback;
 
-    private void OnEnable()
-    {
-        if (instance != null && instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            instance = this;
-        }
-    }
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -40,31 +28,24 @@ public class GameManager : MonoBehaviour
         }
         activeSheep = FindObjectsOfType<Sheep>().ToList<Sheep>();
         activeWolves = FindObjectsOfType<Wolf>().ToList<Wolf>();
+        
     }
     #endregion
 
-    Controls playerInput;
     public static bool GamePaused = false;
 
-    public static List<Level> levels;
+    public List<Level> levels;
     public Level currentLevel;
 
-    public GameObject pauseMenu;
+    [SerializeField] GameObject pauseMenu;
 
-/*    private void OnEnable()
-    {
-        playerInput.Enable();
-    }
-
-    private void OnDisable()
-    {
-        playerInput.Disable();
-    }
-*/
     private void Start()
     {
-        pauseMenu.SetActive(false);
-        
+        if (SceneManager.GetActiveScene().name != "MainMenu")
+        {
+            pauseMenu.SetActive(false);
+        }
+
     }
     public void LoadSceneByName(string sceneName)
     {
@@ -72,8 +53,12 @@ public class GameManager : MonoBehaviour
         if (sceneName.Contains("Level"))
         {
             currentLevel = levels.Find(x => x.name == sceneName);
-            //instantiate level start enemy/ies here after getting random spawn location/s
         }
+    }
+
+    private void OnLevelWasLoaded(int level)
+    {
+        DynamicGI.UpdateEnvironment();
     }
 
     public void OnPauseGame()

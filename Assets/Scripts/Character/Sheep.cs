@@ -27,7 +27,6 @@ public class Sheep : MonoBehaviour
     [SerializeField] float wanderRadius;
     [SerializeField] float followTime;
 
-    [SerializeField] float fleeTimer;
     [SerializeField] float fleeTimerEnd;
     [SerializeField] bool isFleeing = false;
     float wanderTimer;
@@ -37,6 +36,7 @@ public class Sheep : MonoBehaviour
     NavMeshAgent agent;
     
     int previousHitCount;
+
     private void Start()
     {
         _hitCount = GetComponent<HitCount>().Value;
@@ -98,7 +98,6 @@ public class Sheep : MonoBehaviour
             }
             if (!isFleeing)
             {
-                fleeTimer = 0;
                 fsm.TransitionTo(_wander);
             }
             if (player.GetComponent<PlayerController>().followBell)
@@ -228,6 +227,9 @@ public class Sheep : MonoBehaviour
     }
     private void OnDestroy()
     {
-        GameManager.instance.UpdateActiveSheep();
+        if (Application.isPlaying)
+        {
+            GameManager.instance.UpdateActiveSheep();
+        }
     }
 }

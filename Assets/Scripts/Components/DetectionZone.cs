@@ -7,12 +7,6 @@ public class DetectionZone : MonoBehaviour
 {
     [SerializeField] UnityEvent onEnter = default, onExit = default;
 
-    List<Sheep> activeSheep;
-
-    private void Start()
-    {
-        activeSheep = GameManager.instance.activeSheep;
-    }
     private void OnTriggerEnter(Collider other)
     {
         if (onEnter != null)

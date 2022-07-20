@@ -26,7 +26,7 @@ public class Wolf : Enemy
     //radius for closest tree to use for hiding
     float treeRadius;
     //if distance is less than attackRadius, wolf will transition to attack
-    float attackRadius;
+    [SerializeField] float attackRadius;
     //the more wolves are gathered in one spot, the greater the probability to transition to chase or attack
     float probability;
     float hunger;
@@ -64,6 +64,7 @@ public class Wolf : Enemy
         GameManager.instance.onUpdateWolvesCallback += UpdateWolves;
         GameManager.instance.onUpdateSheepCallback += UpdateSheep;
         activeWolves = GameManager.instance.activeWolves;
+        activeSheep = GameManager.instance.activeSheep;
         fsm.OnSpawn(_tactics);
 
     }
@@ -76,9 +77,9 @@ public class Wolf : Enemy
     //wolves start level using tactics to team up and attack player & sheep
     void FSM_Tactics(FSM fsm, FSM.Step step, FSM.State state)
     {
-
         if (step == FSM.Step.Enter)
         {
+            _speed = type.baseSpeed.Value;
             if (_agent.hasPath)
             {
                 _agent.ResetPath();
@@ -98,14 +99,16 @@ public class Wolf : Enemy
         if (step == FSM.Step.Update)
         {
             Vector3 targetPos = target.transform.position;
-
+            if (Vector3.Distance(transform.position, targetPos) < chaseRadius)
+            {
+                fsm.TransitionTo(_chase);
+            }
             if (tactic == "StayHidden")
             {
                 Vector3 destination = StayHidden();
                 _agent.CalculatePath(destination, hidePath);
                 _agent.SetPath(hidePath);
                 hunger += Time.deltaTime;
-                //Debug.Log(hunger);
                 if (targetPos != previousTargetPosition)
                 {
                     destination = StayHidden();
@@ -116,26 +119,36 @@ public class Wolf : Enemy
                     {
                         if (_agent.velocity.sqrMagnitude == 0f)
                         {
-                            StartCoroutine(FaceTarget());
+                            if (isFacingTarget)
+                            {
+                                if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit))
+                                {
+                                    if (hit.collider.gameObject.name != "PlayerParent")
+                                    {
+                                        isFacingTarget = false;
+                                        StartCoroutine(FaceTarget());
+                                    }
+                                }
+                            }
+
+
+
+                        }
+                        if (isFacingTarget)
+                        {
+                            StopCoroutine(FaceTarget());
                         }
                     }
                 }
-                if (Vector3.Distance(transform.position, targetPos) < chaseRadius)
-                {
-                    fsm.TransitionTo(_chase);
-                }
+
             }
             if (tactic == "FindOtherWolves")
             {
                 _agent.stoppingDistance = 5f;
-                Wolf hiddenWolf = GameManager.instance.activeWolves.Find(x => x.tactic == "StayHidden");
+                Wolf hiddenWolf = activeWolves.Find(x => x.tactic == "StayHidden");
                 _agent.CalculatePath(hiddenWolf.transform.position, findPath);
                 _agent.SetPath(findPath);
                 //if destination reached, StayHidden()
-                if (Vector3.Distance(transform.position, targetPos) < chaseRadius)
-                {
-                    fsm.TransitionTo(_chase);
-                }
 
                 
                 //if distance between 2 wolves is less than radius, probability to transition to chase goes up, wolves target different objects to chase & attack
@@ -144,15 +157,16 @@ public class Wolf : Enemy
             //if wolves take too long to find each other, they can still transition to chase if their hunger level reaches the threshold
             if (hunger >= hungerThreshold)
             {
+                _agent.speed += 0.5f;
                 float distToPlayer = Vector3.Distance(transform.position, targetPos);
                 float closestTarget = distToPlayer;
-                GameObject closestSheep = GameManager.instance.activeSheep[0].gameObject;
-                for (int i = 0; i < GameManager.instance.activeSheep.Count; i++)
+                GameObject closestSheep = activeSheep[0].gameObject;
+                for (int i = 0; i < activeSheep.Count; i++)
                 {
-                    closestTarget = Mathf.Min(closestTarget, Vector3.Distance(transform.position, GameManager.instance.activeSheep[i].transform.position));
-                    if (closestTarget == Vector3.Distance(transform.position, GameManager.instance.activeSheep[i].transform.position))
+                    closestTarget = Mathf.Min(closestTarget, Vector3.Distance(transform.position, activeSheep[i].transform.position));
+                    if (closestTarget == Vector3.Distance(transform.position, activeSheep[i].transform.position))
                     {
-                        closestSheep = GameManager.instance.activeSheep[i].gameObject;
+                        closestSheep = activeSheep[i].gameObject;
                     }
                 }
                 target = closestTarget == distToPlayer ? player : closestSheep;
@@ -165,37 +179,32 @@ public class Wolf : Enemy
                     fsm.TransitionTo(_chase);
                 }
             }
-/*
-            for (int w = 0; w < GameManager.instance.activeWolves.Count; w++)
+            /*
+                        for (int w = 0; w < GameManager.instance.activeWolves.Count; w++)
+                        {
+                            if (Vector3.Distance(GameManager.instance.activeWolves[w].transform.position, playerPos) <= chaseRadius)
+                            {
+                                probability += w / GameManager.instance.activeWolves.Count; 
+                            }
+                        }*/
+
+
+
+            for (int s = 0; s < activeSheep.Count; s++)
             {
-                if (Vector3.Distance(GameManager.instance.activeWolves[w].transform.position, playerPos) <= chaseRadius)
-                {
-                    probability += w / GameManager.instance.activeWolves.Count; 
-                }
-            }*/
-
-
-
-           /* for (int s = 0; s < GameManager.instance.activeSheep.Count; s++)
-            {
-                if (Vector3.Distance(GameManager.instance.activeSheep[s].transform.position, transform.position) < radius)
+                if (Vector3.Distance(activeSheep[s].transform.position, transform.position) < chaseRadius)
                 {
                     if (hitCount.Value > 0)
                     {
-                        attackTarget = player;
+                        target = activeSheep[s].gameObject;
                         fsm.TransitionTo(_chase);
                         break;
                     }
-                    attackTarget = GameManager.instance.activeSheep[s].gameObject;
+                    target = activeSheep[s].gameObject;
                     fsm.TransitionTo(_chase);
                 }
-                if (Vector3.Distance(player.transform.position, transform.position) < radius)
-                {
-                    attackTarget = player;
-                    fsm.TransitionTo(_chase);
-                }
-            }*/
-            
+            }
+
             if (hitCount.Value >= _hitsToDefeat)
             {
                 fsm.TransitionTo(_die);
@@ -211,7 +220,9 @@ public class Wolf : Enemy
     {
         if (step == FSM.Step.Enter)
         {
-            _agent.speed += 1;
+            _agent.ResetPath();
+            _speed += 1;
+            _agent.speed = _speed;
             _agent.stoppingDistance = 3f;
             _currentState = _chase;
             Debug.Log("enter chase state");
@@ -225,42 +236,50 @@ public class Wolf : Enemy
         }
         if (step == FSM.Step.Update)
         {
-            Vector3 playerPos = player.transform.position;
-            if (!_agent.hasPath || playerPos != previousTargetPosition)
+            Vector3 targetPos = player.transform.position;
+            if (!_agent.hasPath || targetPos != previousTargetPosition)
             {
-                _agent.SetDestination(playerPos);
+                _agent.SetDestination(targetPos);
             }
 
 /*            if (Vector3.Distance(transform.position, playerPos) > 3 && Vector3.Distance(transform.position, playerPos) < radius)
             {
                 //animation/s for wolf approaching?? 
             }*/
-            if (target == null)
-            {
-                for (int i = 0; i < GameManager.instance.activeSheep.Count; i++)
+                for (int i = 0; i < activeSheep.Count; i++)
                 {
-                    if (Vector3.Distance(transform.position, GameManager.instance.activeSheep[i].transform.position) <= _agent.stoppingDistance)
+                    if (Vector3.Distance(transform.position, activeSheep[i].transform.position) <= attackRadius)
                     {
-                        target = GameManager.instance.activeSheep[i].gameObject;
+                        target = activeSheep[i].gameObject;
                         fsm.TransitionTo(_attack);
                     }
                     else
                     {
-                        target = null;
+                        target = player;
                     }
                 }
-                if (Vector3.Distance(transform.position, playerPos) <= treeRadius)
+                if (Vector3.Distance(transform.position, targetPos) <= attackRadius && target == player)
                 {
-                    target = player;
+                    fsm.TransitionTo(_attack);
                 }
                 else
                 {
-                    target = null;
+                    target = player;
                 }
-            }
-            else
+            if (Vector3.Distance(transform.position, player.transform.position) < 10)
             {
-                fsm.TransitionTo(_attack);
+               if (Physics.Raycast(player.transform.position, player.transform.forward, out RaycastHit hit))
+                {
+                    if (hit.collider.gameObject == this)
+                    {
+                        float randomChanceToDodge = Random.value * 3;
+                        if (randomChanceToDodge < 3 && randomChanceToDodge > 2)
+                        {
+                            CircleTarget();
+                        }
+                        _agent.SetDestination(targetPos);
+                    }
+                }
             }
         }
         if (step == FSM.Step.Exit)
@@ -291,15 +310,16 @@ public class Wolf : Enemy
         }
         if (step == FSM.Step.Update)
         {
-            if (Vector3.Distance(transform.position, target.transform.position) >= 5f)
+            if (Vector3.Distance(transform.position, target.transform.position) > attackRadius)
             {
                 fsm.TransitionTo(_chase);
             }
+
             //add code to play attack animation
 
-            if (Vector3.Distance(transform.position, target.transform.position) < 3f)
+            if (Vector3.Distance(transform.position, target.transform.position) <= attackRadius)
             {
-                if (!timer.wolfCooldownTimer)
+                if (!timer.wolfCooldownTimerActive)
                 {
                     if (target != null)
                     {
@@ -308,6 +328,21 @@ public class Wolf : Enemy
                     }
                 }
             }
+            if (Vector3.Distance(transform.position, player.transform.position) < 10)
+            {
+               if (Physics.Raycast(player.transform.position, player.transform.forward, out RaycastHit hit))
+                {
+                    if (hit.collider.gameObject == this)
+                    {
+                        float randomChanceToDodge = Random.value * 3;
+                        if (randomChanceToDodge < 3 && randomChanceToDodge > 2)
+                        {
+                            CircleTarget();
+                        }
+                    }
+                }
+            }
+
             if (hitCount.Value >= _hitsToDefeat)
             {
                 fsm.TransitionTo(_die);
@@ -396,7 +431,6 @@ public class Wolf : Enemy
         {
             tactic = "FindOtherWolves";
         }
-        Debug.Log(tactic);
     }
     //called when GameManager.instance.activeWolves changes
     void UpdateWolves()
@@ -407,6 +441,11 @@ public class Wolf : Enemy
     void UpdateSheep()
     {
         activeSheep = GameManager.instance.activeSheep;
+    }
+    void CircleTarget()
+    {
+        _agent.SetPath(null);
+        transform.RotateAround(player.transform.position, Vector3.up, Random.Range(10, 50));
     }
     //visualize tree radius for finding closest tree to hide behind
     private void OnDrawGizmos()
@@ -432,6 +471,9 @@ public class Wolf : Enemy
     }
     private void OnDestroy()
     {
-        GameManager.instance.UpdateActiveWolves();
+        if (Application.isPlaying)
+        {
+            GameManager.instance.UpdateActiveWolves();
+        }
     }
 }

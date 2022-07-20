@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     public float attackCooldown;
     //this timer is incremented until it reaches attackCooldown
 
-    private bool isFacingTarget = false;
+    public bool isFacingTarget = false;
 
     [HideInInspector] public GameObject player;
 
@@ -43,22 +43,29 @@ public class Enemy : MonoBehaviour
     //if player or sheep is targeted, face it-- needs fixing
     public IEnumerator FaceTarget()
     {
+
         if (target == null)
         {
             target = player;
         }
-        while (isFacingTarget == false)
+        while (!isFacingTarget)
         {
+            
             Vector3 direction = (target.transform.position - transform.position).normalized;
+            if (direction.sqrMagnitude <= 0.1f)
+            {
+                direction = Vector3.zero;
+            }
             if (direction == Vector3.zero)
             {
-                direction = new Vector3(0.01f, 0.01f, 0.01f);
+                isFacingTarget = true;
             }
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
             float angle = Vector3.Angle(transform.position, target.transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, (angle / 360) * 2f);
-            yield return null;
-            
+            yield return null;  
         }
+        isFacingTarget = false;
+
     }
 }

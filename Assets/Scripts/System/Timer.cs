@@ -1,32 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.CompilerServices;
+
 
 public class Timer : MonoBehaviour
 {
-    public bool wolfCooldownTimer;
-    public bool playerCooldownTimer;
+    public bool wolfCooldownTimerActive;
+    public bool playerCooldownTimerActive;
+    public bool followBellTimerActive;
     public bool isFleeing;
 
-    public IEnumerator CooldownTimer(float cooldownTime, string caller)
+    //cooldown timer for player and wolf attack, and player ringing bell
+    public IEnumerator CooldownTimer(float cooldownTime, string caller, [CallerMemberName] string callingMethod = "")
     {
         float timer = 0;
         if (caller == "Wolf")
         {
-            wolfCooldownTimer = true;
+            wolfCooldownTimerActive = true;
         }
         else if (caller == "Player")
         {
-            playerCooldownTimer = true;
+            if (callingMethod == "OnRingBell")
+            {
+                followBellTimerActive = true;
+            }
+            else
+            {
+                playerCooldownTimerActive = true;
+            }
         }
         while (timer <= cooldownTime)
         {
             timer += Time.deltaTime;
             yield return null;//new WaitForSeconds(0.25f);
         }
-        wolfCooldownTimer = false;
-        playerCooldownTimer = false;
+        wolfCooldownTimerActive = false;
+        playerCooldownTimerActive = false;
     }
+
+    //timer for how long sheep flees for after being attacked
     public IEnumerator FleeTimer(float fleeTimerEnd)
     {
         float fleeTimer = 0;

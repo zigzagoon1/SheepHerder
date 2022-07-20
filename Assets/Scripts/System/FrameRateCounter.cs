@@ -8,7 +8,7 @@ public class FrameRateCounter : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI display;
     [SerializeField] DisplayMode displayMode = DisplayMode.FPS;
-    [SerializeField, Range(0, 1)] float sampleDuration = 1f;
+    [SerializeField, Range(0,1)] float sampleDuration = 1f;
     int frames;
     float duration, bestDuration = float.MaxValue, worstDuration;
 
@@ -23,7 +23,7 @@ public class FrameRateCounter : MonoBehaviour
         {
             bestDuration = frameDuration;
         }
-
+        
         if (frameDuration > worstDuration)
         {
             worstDuration = frameDuration;

@@ -21,6 +21,7 @@ public class TreeColliders : MonoBehaviour
     void PlaceTreeColliders()
     {
         TreeInstance[] trees = terrain.terrainData.treeInstances;
+        Debug.Log(terrain.terrainData.treeInstanceCount);
         TerrainData tData = terrain.terrainData;
         GameObject colliderParent = new GameObject("ColliderParent");
             for (int i = 0; i < trees.Length - 1; i++)
@@ -29,17 +30,17 @@ public class TreeColliders : MonoBehaviour
                 {
                     layer = 11
                 };
-                float width = tData.size.x;
-                float height = tData.size.z;
-                float y = tData.size.y;
                 Vector3 colliderPosition = Vector3.Scale(trees[i].position, tData.size);
                 colliderObject.transform.parent = colliderParent.transform;
                 colliderObject.transform.position = colliderPosition;
-                colliderObject.AddComponent<NavMeshObstacle>();
                 MeshCollider meshCollider = colliderObject.AddComponent<MeshCollider>();
                 meshCollider.sharedMesh = mesh;
-            meshCollider.convex = true;
+                meshCollider.convex = true;
                 meshCollider.transform.position = new Vector3(colliderPosition.x, tData.GetTreeInstance(i).position.y, colliderPosition.z);
+                colliderObject.AddComponent<NavMeshObstacle>();
+                colliderObject.GetComponent<NavMeshObstacle>().carving = true;
+                colliderObject.transform.hasChanged = false;
             }
+        colliderParent.transform.hasChanged = false;
     }
 }

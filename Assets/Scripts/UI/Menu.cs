@@ -7,12 +7,7 @@ using TMPro;
 //main menu and pause menu functionality
 public class Menu : MonoBehaviour
 {
-    Controls playerInput;
     public GameObject mainMenu, levelSelect, settings, pauseMenu;
-    //[SerializeField] Button playButton, levelSelectButton, settingsButton, quitButton;
-
-
-
 
     public void PlayButtonPressed()
     {
@@ -22,7 +17,8 @@ public class Menu : MonoBehaviour
 
     public void LevelSelectButtonPressed() 
     {
-        GameManager.instance.LoadSceneByName("Settings");
+        //GameManager.instance.LoadSceneByName("LevelSelect");
+        Debug.Log("Loading level select...");
     }
 
     public void SettingsButtonsPressed()

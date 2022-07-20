@@ -8,15 +8,9 @@ public class Level : ScriptableObject
 {
     public string sceneName;
     public int levelNumber;
-    public EnemyType[] enemiesAtStart;
-    public Transform[] enemyStartPositions;
     public int sheepCount;
+    public bool unlocked;
+    public bool completed;
     //map/terrain/layout
     //UI Display Info variable (to display timer or no timer or any level-specific info)
-
-    private void Awake()
-    {
-        
-
-    }
 }

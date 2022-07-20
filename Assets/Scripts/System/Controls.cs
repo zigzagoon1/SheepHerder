@@ -27,17 +27,25 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Attack"",
-                    ""type"": ""Button"",
+                    ""name"": ""AimAttack"",
+                    ""type"": ""Value"",
                     ""id"": ""a476b646-8ce5-45c3-9804-562f2ab5734a"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": ""NormalizeVector2"",
                     ""interactions"": """"
                 },
                 {
                     ""name"": ""RingBell"",
                     ""type"": ""Button"",
                     ""id"": ""e9aa8071-7cf8-4c1a-a167-f77368a85d41"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""LaunchAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""7e0f9ce0-5fe6-4b97-8be5-9431356664f9"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -100,15 +108,59 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""82aaecd2-b585-41cb-a640-91cf07ae5bb6"",
-                    ""path"": ""<Keyboard>/z"",
+                    ""name"": ""2D Vector"",
+                    ""id"": ""2039cd35-0efc-41cc-8da6-737b36f8a67d"",
+                    ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Attack"",
-                    ""isComposite"": false,
+                    ""action"": ""AimAttack"",
+                    ""isComposite"": true,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""a044e935-e8fa-47c9-9e3e-ee0d6ebfd888"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": ""Invert"",
+                    ""groups"": """",
+                    ""action"": ""AimAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""4638b993-ca19-4b47-975b-2862ae61acb8"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": ""Invert"",
+                    ""groups"": """",
+                    ""action"": ""AimAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""41273f0b-9e41-4c3a-aa67-7f6bcf719401"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": ""Invert"",
+                    ""groups"": """",
+                    ""action"": ""AimAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""32b9d67c-ee9e-4d93-8841-85d1abf26608"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": ""Invert"",
+                    ""groups"": """",
+                    ""action"": ""AimAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": """",
@@ -118,6 +170,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""RingBell"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ceef1811-56a2-49f6-83cb-72d6ff7c71bc"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": ""CustomHolding(duration=1.5,pressPoint=1)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LaunchAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -159,7 +222,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 {
                     ""name"": ""negative"",
                     ""id"": ""45a2febf-291b-481d-9701-1be54590d943"",
-                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""path"": ""<Keyboard>/comma"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -170,7 +233,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 {
                     ""name"": ""positive"",
                     ""id"": ""109ad49a-91db-454d-96d0-ccc059caaa6c"",
-                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""path"": ""<Keyboard>/period"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -192,7 +255,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 {
                     ""name"": ""positive"",
                     ""id"": ""0fe59996-98b1-47b9-b1e2-26e0ea216a58"",
-                    ""path"": ""<Keyboard>/upArrow"",
+                    ""path"": ""<Keyboard>/quote"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -203,7 +266,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 {
                     ""name"": ""negative"",
                     ""id"": ""516dcf08-8df7-4562-b528-85a4ee314f4f"",
-                    ""path"": ""<Keyboard>/downArrow"",
+                    ""path"": ""<Keyboard>/slash"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -268,8 +331,9 @@ public class @Controls : IInputActionCollection, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
-        m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
+        m_Player_AimAttack = m_Player.FindAction("AimAttack", throwIfNotFound: true);
         m_Player_RingBell = m_Player.FindAction("RingBell", throwIfNotFound: true);
+        m_Player_LaunchAttack = m_Player.FindAction("LaunchAttack", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_RotateCamera = m_Camera.FindAction("RotateCamera", throwIfNotFound: true);
@@ -327,15 +391,17 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
-    private readonly InputAction m_Player_Attack;
+    private readonly InputAction m_Player_AimAttack;
     private readonly InputAction m_Player_RingBell;
+    private readonly InputAction m_Player_LaunchAttack;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
         public PlayerActions(@Controls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
-        public InputAction @Attack => m_Wrapper.m_Player_Attack;
+        public InputAction @AimAttack => m_Wrapper.m_Player_AimAttack;
         public InputAction @RingBell => m_Wrapper.m_Player_RingBell;
+        public InputAction @LaunchAttack => m_Wrapper.m_Player_LaunchAttack;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -348,12 +414,15 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Move.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
-                @Attack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
-                @Attack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
-                @Attack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
+                @AimAttack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAimAttack;
+                @AimAttack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAimAttack;
+                @AimAttack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAimAttack;
                 @RingBell.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRingBell;
                 @RingBell.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRingBell;
                 @RingBell.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRingBell;
+                @LaunchAttack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLaunchAttack;
+                @LaunchAttack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLaunchAttack;
+                @LaunchAttack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLaunchAttack;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -361,12 +430,15 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
-                @Attack.started += instance.OnAttack;
-                @Attack.performed += instance.OnAttack;
-                @Attack.canceled += instance.OnAttack;
+                @AimAttack.started += instance.OnAimAttack;
+                @AimAttack.performed += instance.OnAimAttack;
+                @AimAttack.canceled += instance.OnAimAttack;
                 @RingBell.started += instance.OnRingBell;
                 @RingBell.performed += instance.OnRingBell;
                 @RingBell.canceled += instance.OnRingBell;
+                @LaunchAttack.started += instance.OnLaunchAttack;
+                @LaunchAttack.performed += instance.OnLaunchAttack;
+                @LaunchAttack.canceled += instance.OnLaunchAttack;
             }
         }
     }
@@ -457,8 +529,9 @@ public class @Controls : IInputActionCollection, IDisposable
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
-        void OnAttack(InputAction.CallbackContext context);
+        void OnAimAttack(InputAction.CallbackContext context);
         void OnRingBell(InputAction.CallbackContext context);
+        void OnLaunchAttack(InputAction.CallbackContext context);
     }
     public interface ICameraActions
     {

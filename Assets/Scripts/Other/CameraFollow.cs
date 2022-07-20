@@ -1,3 +1,4 @@
+//followed this tutorial from CatlikeCoding: https://catlikecoding.com/unity/tutorials/movement/orbit-camera/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class CameraFollow : MonoBehaviour
     const float e = 0.001f;
 
     Vector3 focusPoint, previousFocusPoint;
-    Vector2 orbitAngles = new Vector2(50, 0);
+    Vector2 orbitAngles = new Vector2(40, 108);
     Camera mainCamera;
 
     private Vector2 inputRotation;
@@ -93,7 +94,7 @@ public class CameraFollow : MonoBehaviour
             focusPoint = targetPoint;
         }
     }
-    bool ManualRotation()
+    public bool ManualRotation()
     {
         float leftRightFloat = leftRight.ReadValue<float>();
         float upDownFloat = upDown.ReadValue<float>();
